@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 public class ItemDto {
     private Long id;
 

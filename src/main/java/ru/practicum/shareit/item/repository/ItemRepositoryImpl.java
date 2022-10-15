@@ -6,7 +6,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.*;
 
 @Component
-public class ItemRepositoryImpl implements ItemRepository{
+public class ItemRepositoryImpl implements ItemRepository {
     private final Map<Long, Item> items = new HashMap<>();
     private Long id = 1L;
 
