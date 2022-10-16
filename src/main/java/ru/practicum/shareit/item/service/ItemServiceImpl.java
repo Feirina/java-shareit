@@ -1,12 +1,12 @@
 package ru.practicum.shareit.item.service;
 
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.exception.UserNotFoundException;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -25,42 +25,40 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getAll(Long userId) {
         List<ItemDto> items = new ArrayList<>();
-        for (Item item : itemRepository.getAll()) {
+        for (Item item : itemRepository.findAll()) {
             if (item.getOwner().getId().equals(userId)) {
                 items.add(ItemMapper.toItemDto(item));
             }
         }
+
         return items;
     }
 
     @Override
     public ItemDto getById(Long id) {
-        if (itemRepository.getById(id).isEmpty()) {
-            throw new ItemNotFoundException("Вещи с данным id не найдено");
-        }
-        return ItemMapper.toItemDto(itemRepository.getById(id).get());
+        Item item = itemRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("Вещи с данным id не найдено"));
+
+        return ItemMapper.toItemDto(item);
     }
 
     @Override
     public ItemDto create(ItemDto itemDto, Long userId) {
-        if (userRepository.getById(userId).isEmpty()) {
-            throw new UserNotFoundException("Невозможно создать вещь - пользователя с таким id не существует");
-        }
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException("Невозможно создать вещь - пользователя с таким id не существует"));
         Item item = ItemMapper.toItem(itemDto);
-        item.setOwner(userRepository.getById(userId).get());
+        item.setOwner(user);
         itemRepository.create(item);
+
         return ItemMapper.toItemDto(item);
     }
 
     @Override
     public ItemDto update(ItemDto itemDto, Long id, Long userId) {
-        if (userRepository.getById(userId).isEmpty()) {
-            throw new UserNotFoundException("Невозможно обновить вещь - пользователя с таким id не существует");
+        Item item = itemRepository.findById(id).orElseThrow(() -> new NotFoundException("Вещи с данным id не найдено"));
+        if (!item.getOwner().getId().equals(userId)) {
+            throw new NotFoundException("Невозможно обновить вещь - у данного пользователя нет такой вещи");
         }
-        if (!itemRepository.getById(id).get().getOwner().getId().equals(userId)) {
-            throw new ItemNotFoundException("Невозможно обновить вещь - у данного пользователя нет такой вещи");
-        }
-        Item item = itemRepository.getById(id).get();
         if (itemDto.getName() != null) {
             item.setName(itemDto.getName());
         }
@@ -70,7 +68,8 @@ public class ItemServiceImpl implements ItemService {
         if (itemDto.getAvailable() != null) {
             item.setAvailable(itemDto.getAvailable());
         }
-        return ItemMapper.toItemDto(itemRepository.update(item, id));
+
+        return ItemMapper.toItemDto(itemRepository.update(item));
     }
 
     @Override
@@ -85,12 +84,17 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank()) {
             return searchedItems;
         }
-        for (Item item : itemRepository.getAll()) {
-            if (item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                    item.getDescription().toLowerCase().contains(text.toLowerCase()) && item.getAvailable()) {
+        for (Item item : itemRepository.findAll()) {
+            if (isSearched(text, item)) {
                 searchedItems.add(ItemMapper.toItemDto(item));
             }
         }
+
         return searchedItems;
+    }
+
+    private Boolean isSearched(String text, Item item) {
+        return item.getName().toLowerCase().contains(text.toLowerCase()) ||
+                item.getDescription().toLowerCase().contains(text.toLowerCase()) && item.getAvailable();
     }
 }

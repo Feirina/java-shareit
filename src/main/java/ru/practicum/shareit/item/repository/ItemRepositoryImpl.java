@@ -8,15 +8,16 @@ import java.util.*;
 @Component
 public class ItemRepositoryImpl implements ItemRepository {
     private final Map<Long, Item> items = new HashMap<>();
+
     private Long id = 1L;
 
     @Override
-    public List<Item> getAll() {
+    public List<Item> findAll() {
         return new ArrayList<>(items.values());
     }
 
     @Override
-    public Optional<Item> getById(Long id) {
+    public Optional<Item> findById(Long id) {
         return items.get(id) != null ? Optional.of(items.get(id)) : Optional.empty();
     }
 
@@ -25,13 +26,15 @@ public class ItemRepositoryImpl implements ItemRepository {
         item.setId(id);
         id++;
         items.put(item.getId(), item);
+
         return item;
     }
 
     @Override
-    public Item update(Item item, Long id) {
-        items.put(id, item);
-        return getById(id).get();
+    public Item update(Item item) {
+        items.put(item.getId(), item);
+
+        return findById(item.getId()).get();
     }
 
     @Override

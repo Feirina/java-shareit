@@ -12,11 +12,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class UserControllerTests {
+class UserControllerTests {
     @Autowired
     private UserController userController;
 
-    private UserDto user = UserDto.builder().build().builder().name("name").email("user@email.com").build();
+    private UserDto user = UserDto.builder()
+            .name("name")
+            .email("user@email.com")
+            .build();
 
     @Test
     void createTest() {

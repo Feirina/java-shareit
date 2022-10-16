@@ -1,10 +1,10 @@
 package ru.practicum.shareit.user.service;
 
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.ConflictException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.exception.UserEmailException;
-import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -22,32 +22,32 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getAll() {
         List<UserDto> users = new ArrayList<>();
-        for (User user : userRepository.getAll()) {
+        for (User user : userRepository.findAll()) {
             users.add(UserMapper.toUserDto(user));
         }
+
         return users;
     }
 
     @Override
     public UserDto getById(Long id) {
-        if (userRepository.getById(id).isEmpty()) {
-            throw new UserNotFoundException("Пользователя с данным id не найдено");
-        }
-        return UserMapper.toUserDto(userRepository.getById(id).get());
+        User user = userRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("Пользователя с данным id не найдено"));
+
+        return UserMapper.toUserDto(user);
     }
 
     @Override
     public UserDto create(User user) {
         checkEmailUnique(user);
+
         return UserMapper.toUserDto(userRepository.create(user));
     }
 
     @Override
     public UserDto update(User user, Long id) {
-        User updatedUser = userRepository.getById(id).get();
-        if (updatedUser == null) {
-            throw new UserNotFoundException("Невозможно обновить данные пользователя. Пользователя с данным id не найдено");
-        }
+        User updatedUser = userRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("Невозможно обновить данные пользователя. Пользователя с данным id не найдено"));
         if (user.getEmail() != null) {
             checkEmailUnique(user);
             updatedUser.setEmail(user.getEmail());
@@ -55,7 +55,8 @@ public class UserServiceImpl implements UserService {
         if (user.getName() != null) {
             updatedUser.setName(user.getName());
         }
-        return UserMapper.toUserDto(userRepository.update(updatedUser, id));
+
+        return UserMapper.toUserDto(userRepository.update(updatedUser));
     }
 
     @Override
@@ -65,9 +66,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkEmailUnique(User user) {
-        for (User userCheck : userRepository.getAll()) {
+        for (User userCheck : userRepository.findAll()) {
             if (user.getEmail().equals(userCheck.getEmail())) {
-                throw new UserEmailException("Пользователь с таким email уже зарегистрирован");
+                throw new ConflictException("Пользователь с таким email уже зарегистрирован");
             }
         }
     }
