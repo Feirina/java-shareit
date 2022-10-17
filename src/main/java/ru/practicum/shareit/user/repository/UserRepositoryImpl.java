@@ -34,7 +34,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User update(User user) {
         users.put(user.getId(), user);
 
-        return findById(user.getId()).get();
+        return user;
     }
 
     @Override

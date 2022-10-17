@@ -2,12 +2,14 @@ package ru.practicum.shareit.item.service;
 
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
+
+import static ru.practicum.shareit.item.ItemMapper.toItemDto;
+import static ru.practicum.shareit.item.ItemMapper.toItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public class ItemServiceImpl implements ItemService {
         List<ItemDto> items = new ArrayList<>();
         for (Item item : itemRepository.findAll()) {
             if (item.getOwner().getId().equals(userId)) {
-                items.add(ItemMapper.toItemDto(item));
+                items.add(toItemDto(item));
             }
         }
 
@@ -36,28 +38,30 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getById(Long id) {
-        Item item = itemRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("Вещи с данным id не найдено"));
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Не найдена вещь с id: " + id));
 
-        return ItemMapper.toItemDto(item);
+        return toItemDto(item);
     }
 
     @Override
     public ItemDto create(ItemDto itemDto, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() ->
-                new NotFoundException("Невозможно создать вещь - пользователя с таким id не существует"));
-        Item item = ItemMapper.toItem(itemDto);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Невозможно создать вещь - " +
+                        "не найден пользователь с id: " + userId));
+        Item item = toItem(itemDto);
         item.setOwner(user);
         itemRepository.create(item);
 
-        return ItemMapper.toItemDto(item);
+        return toItemDto(item);
     }
 
     @Override
     public ItemDto update(ItemDto itemDto, Long id, Long userId) {
-        Item item = itemRepository.findById(id).orElseThrow(() -> new NotFoundException("Вещи с данным id не найдено"));
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Не найдена вещь с id: " + id));
         if (!item.getOwner().getId().equals(userId)) {
-            throw new NotFoundException("Невозможно обновить вещь - у данного пользователя нет такой вещи");
+            throw new NotFoundException("Невозможно обновить вещь - у пользователя с id: " + userId + "нет такой вещи");
         }
         if (itemDto.getName() != null) {
             item.setName(itemDto.getName());
@@ -69,7 +73,7 @@ public class ItemServiceImpl implements ItemService {
             item.setAvailable(itemDto.getAvailable());
         }
 
-        return ItemMapper.toItemDto(itemRepository.update(item));
+        return toItemDto(itemRepository.update(item));
     }
 
     @Override
@@ -86,7 +90,7 @@ public class ItemServiceImpl implements ItemService {
         }
         for (Item item : itemRepository.findAll()) {
             if (isSearched(text, item)) {
-                searchedItems.add(ItemMapper.toItemDto(item));
+                searchedItems.add(toItemDto(item));
             }
         }
 
