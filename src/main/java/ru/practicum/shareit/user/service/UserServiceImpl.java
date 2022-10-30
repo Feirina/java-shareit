@@ -9,6 +9,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.practicum.shareit.user.UserMapper.toUser;
 import static ru.practicum.shareit.user.UserMapper.toUserDto;
@@ -55,12 +56,8 @@ public class UserServiceImpl implements UserService {
         User updatedUser = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Невозможно обновить данные пользователя. " +
                         "Не найден пользователь с id: " + id));
-        if (userDto.getEmail() != null) {
-            updatedUser.setEmail(userDto.getEmail());
-        }
-        if (userDto.getName() != null) {
-            updatedUser.setName(userDto.getName());
-        }
+        Optional.ofNullable(userDto.getEmail()).ifPresent(updatedUser::setEmail);
+        Optional.ofNullable(userDto.getName()).ifPresent(updatedUser::setName);
 
         return toUserDto(userRepository.save(updatedUser));
     }

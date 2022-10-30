@@ -20,6 +20,7 @@ public class ItemRequest {
     private Long id;
 
     @NotBlank
+    @Column(length = 1000, nullable = false)
     private String description;
 
     @ManyToOne()

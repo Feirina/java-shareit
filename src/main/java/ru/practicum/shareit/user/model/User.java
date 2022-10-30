@@ -19,10 +19,11 @@ public class User {
     private Long id;
 
     @NotBlank
+    @Column(length = 50, nullable = false)
     private String name;
 
     @Email
     @NotBlank
-    @Column(unique = true)
+    @Column(unique = true, length = 50, nullable = false)
     private String email;
 }
