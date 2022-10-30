@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request.model;
+package ru.practicum.shareit.item.model;
 
 import lombok.*;
 import ru.practicum.shareit.user.model.User;
@@ -8,23 +8,27 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "requests")
+@Table(name = "comments")
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class ItemRequest {
+@NoArgsConstructor
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
-    private String description;
+    private String text;
 
     @ManyToOne()
-    @JoinColumn(name = "requestor_id", referencedColumnName = "id")
-    private User requestor;
+    @JoinColumn(name = "item_id", referencedColumnName = "id")
+    private Item item;
+
+    @ManyToOne()
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    private User author;
 
     private LocalDateTime created;
 }

@@ -17,9 +17,6 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
-		<spotbugs-maven-plugin.version>4.7.0.0</spotbugs-maven-plugin.version>
-		<jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -106,6 +103,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>3.1.2</version>
 					<configuration>
 						<configLocation>checkstyle.xml</configLocation>
 						<failOnViolation>true</failOnViolation>
@@ -131,6 +129,7 @@
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>
+					<version>4.7.0.0</version>
 					<configuration>
 						<effort>Max</effort>
 						<threshold>High</threshold>
@@ -146,6 +145,7 @@
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.8.8</version>
 					<configuration>
 						<output>file</output>
 					</configuration>

@@ -1,11 +1,10 @@
-package ru.practicum.shareit.inmemorytests;
+package ru.practicum.shareit.repositorytests;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.user.UserController;
-import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,22 +22,22 @@ class UserControllerTests {
 
     @Test
     void createTest() {
-        UserDto userDto = userController.create(UserMapper.toUser(user));
+        UserDto userDto = userController.create(user);
         assertEquals(userDto.getId(), userController.getById(userDto.getId()).getId());
     }
 
     @Test
     void updateTest() {
-        userController.create(UserMapper.toUser(user));
+        userController.create(user);
         UserDto userDto = user.toBuilder().email("update@email.com").build();
-        userController.update(UserMapper.toUser(userDto), 1L);
+        userController.update(userDto, 1L);
         assertEquals(userDto.getEmail(), userController.getById(1L).getEmail());
     }
 
     @Test
     void deleteTest() {
-        UserDto userDto = userController.create(UserMapper.toUser(user));
-        assertEquals(userController.getAll().size(), 1);
+        UserDto userDto = userController.create(user);
+        assertEquals(1, userController.getAll().size());
         userController.delete(userDto.getId());
         assertEquals(0, userController.getAll().size());
     }
