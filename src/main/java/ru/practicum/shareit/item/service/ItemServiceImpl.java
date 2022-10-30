@@ -49,14 +49,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getAll(Long userId) {
         List<Item> items = itemRepository.findAllByOwner_Id(userId);
-        List<ItemDto> itemDtoList = items.stream().map(ItemMapper :: toItemDto).collect(Collectors.toList());
+        List<ItemDto> itemDtoList = items.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
         itemDtoList.forEach(itemDto -> {
             itemDto.setLastBooking(bookingRepository.findAllByItem_IdOrderByStartAsc(itemDto.getId()).isEmpty() ?
                     null : toBookingShortDto(bookingRepository.findAllByItem_IdOrderByStartAsc(itemDto.getId()).get(0)));
             itemDto.setNextBooking(bookingRepository.findAllByItem_IdOrderByStartDesc(itemDto.getId()).isEmpty() ?
                     null : toBookingShortDto(bookingRepository.findAllByItem_IdOrderByStartDesc(itemDto.getId()).get(0)));
             itemDto.setComments(commentRepository.findAllByItem_Id(itemDto.getId())
-                    .stream().map(CommentMapper :: toCommentDto).collect(Collectors.toList()));
+                    .stream().map(CommentMapper::toCommentDto).collect(Collectors.toList()));
         });
 
         return itemDtoList;
@@ -69,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new NotFoundException("Не найдена вещь с id: " + id));
         ItemDto itemDto = toItemDto(item);
         itemDto.setComments(commentRepository.findAllByItem_Id(id)
-                .stream().map(CommentMapper :: toCommentDto).collect(Collectors.toList()));
+                .stream().map(CommentMapper::toCommentDto).collect(Collectors.toList()));
         if (item.getOwner().getId().equals(ownerId)) {
             itemDto.setLastBooking(bookingRepository.findAllByItem_IdOrderByStartAsc(id).isEmpty() ? null :
                     toBookingShortDto(bookingRepository.findAllByItem_IdOrderByStartAsc(id).get(0)));
