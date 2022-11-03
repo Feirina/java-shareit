@@ -1,7 +1,7 @@
 package ru.practicum.shareit.user.service;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.ConflictException;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
@@ -9,7 +9,9 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static ru.practicum.shareit.user.UserMapper.toUser;
 import static ru.practicum.shareit.user.UserMapper.toUserDto;
 
 @Service
@@ -20,6 +22,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<UserDto> getAll() {
         List<UserDto> users = new ArrayList<>();
@@ -30,6 +33,7 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDto getById(Long id) {
         User user = userRepository.findById(id)
@@ -38,40 +42,29 @@ public class UserServiceImpl implements UserService {
         return toUserDto(user);
     }
 
+    @Transactional
     @Override
-    public UserDto create(User user) {
-        throwIfEmailNotUnique(user);
+    public UserDto create(UserDto userDto) {
+        User user = toUser(userDto);
 
-        return toUserDto(userRepository.create(user));
+        return toUserDto(userRepository.save(user));
     }
 
+    @Transactional
     @Override
-    public UserDto update(User user, Long id) {
+    public UserDto update(UserDto userDto, Long id) {
         User updatedUser = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Невозможно обновить данные пользователя. " +
                         "Не найден пользователь с id: " + id));
-        if (user.getEmail() != null) {
-            throwIfEmailNotUnique(user);
-            updatedUser.setEmail(user.getEmail());
-        }
-        if (user.getName() != null) {
-            updatedUser.setName(user.getName());
-        }
+        Optional.ofNullable(userDto.getEmail()).ifPresent(updatedUser::setEmail);
+        Optional.ofNullable(userDto.getName()).ifPresent(updatedUser::setName);
 
-        return toUserDto(userRepository.update(updatedUser));
+        return toUserDto(userRepository.save(updatedUser));
     }
 
+    @Transactional
     @Override
     public void delete(Long id) {
-        getById(id);
-        userRepository.delete(id);
-    }
-
-    private void throwIfEmailNotUnique(User user) {
-        for (User userCheck : userRepository.findAll()) {
-            if (user.getEmail().equals(userCheck.getEmail())) {
-                throw new ConflictException("Пользователь с таким email уже зарегистрирован");
-            }
-        }
+        userRepository.deleteById(id);
     }
 }
