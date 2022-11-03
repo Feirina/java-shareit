@@ -23,7 +23,7 @@ public class ItemRequest {
     @Column(length = 1000, nullable = false)
     private String description;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "requestor_id", referencedColumnName = "id")
     private User requestor;
 

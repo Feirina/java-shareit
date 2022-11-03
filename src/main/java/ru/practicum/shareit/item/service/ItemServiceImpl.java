@@ -55,8 +55,7 @@ public class ItemServiceImpl implements ItemService {
             itemDto.setLastBooking(bookingRepository.findAllByItemIdOrderByStartAsc(itemDto.getId()).isEmpty() ?
                     null : toBookingShortDto(bookingRepository.findAllByItemIdOrderByStartAsc(itemDto.getId()).get(0)));
             itemDto.setNextBooking(itemDto.getLastBooking() == null ?
-                    null : toBookingShortDto(bookingRepository.findAllByItemIdOrderByStartAsc(itemDto.getId())
-                    .get(bookingRepository.findAllByItemIdOrderByStartAsc(itemDto.getId()).size() - 1)));
+                    null : toBookingShortDto(bookingRepository.findAllByItemIdOrderByStartDesc(itemDto.getId()).get(0)));
             itemDto.setComments(commentRepository.findAllByItemId(itemDto.getId())
                     .stream().map(CommentMapper::toCommentDto).collect(Collectors.toList()));
         });
@@ -76,8 +75,8 @@ public class ItemServiceImpl implements ItemService {
             itemDto.setLastBooking(bookingRepository.findAllByItemIdOrderByStartAsc(id).isEmpty() ? null :
                     toBookingShortDto(bookingRepository.findAllByItemIdOrderByStartAsc(id).get(0)));
             itemDto.setNextBooking(itemDto.getLastBooking() == null ?
-                    null : toBookingShortDto(bookingRepository.findAllByItemIdOrderByStartAsc(itemDto.getId())
-                    .get(bookingRepository.findAllByItemIdOrderByStartAsc(itemDto.getId()).size() - 1)));
+                    null : toBookingShortDto(bookingRepository.findAllByItemIdOrderByStartDesc(itemDto.getId())
+                    .get(0)));
         }
 
         return itemDto;

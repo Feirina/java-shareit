@@ -3,10 +3,10 @@ spring:
     init:
       mode: always
   datasource:
-    username: sa
+    username: test
     url: jdbc:h2:mem:shareit
     driverClassName: org.h2.Driver
-    password: password
+    password: test
   jpa:
     properties:
       hibernate:

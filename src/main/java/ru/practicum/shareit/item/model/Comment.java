@@ -23,11 +23,11 @@ public class Comment {
     @Column(length = 1000, nullable = false)
     private String text;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "item_id", referencedColumnName = "id", nullable = false)
     private Item item;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
     private User author;
 
