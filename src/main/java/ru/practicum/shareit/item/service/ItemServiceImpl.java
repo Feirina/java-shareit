@@ -14,6 +14,7 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -85,7 +86,10 @@ public class ItemServiceImpl implements ItemService {
         Item item = toItem(itemDto);
         item.setOwner(user);
         if (itemDto.getRequestId() != null) {
-            item.setRequest(itemRequestRepository.findById(itemDto.getRequestId()).get());
+            ItemRequest itemRequest = itemRequestRepository.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> new NotFoundException("Невозможно создать вещь - " +
+                            "не найден запрос с id: " + itemDto.getRequestId()));
+            item.setRequest(itemRequest);
         }
         itemRepository.save(item);
 

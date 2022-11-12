@@ -80,7 +80,7 @@ public class BookingServiceImpl implements BookingService {
                         "не найдено бронирование с id " + bookingId));
         if (!userId.equals(booking.getItem().getOwner().getId())) {
             throw new NotFoundException("Невозможно подтвердить бронирование - " +
-                    "не найдено бронирование с id " + bookingId + " у пользователя с id" + userId);
+                    "не найден запрос на бронирование с id " + bookingId + " у пользователя с id" + userId);
         }
         if (!booking.getStatus().equals(WAITING)) {
             throw new BadRequestException("Невозможно подтвердить бронирование - " +

@@ -4,12 +4,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import ru.practicum.shareit.exception.BadRequestException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.ItemRequestController;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.user.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -39,10 +42,20 @@ class ItemRequestControllerTests {
     }
 
     @Test
+    void createByWrongUserTest() {
+        assertThrows(NotFoundException.class, () -> itemRequestController.create(1L, itemRequestDto));
+    }
+
+    @Test
     void getAllByUserTest() {
         UserDto user = userController.create(userDto);
         ItemRequestDto itemRequest = itemRequestController.create(user.getId(), itemRequestDto);
         assertEquals(1, itemRequestController.getAllByUser(user.getId()).size());
+    }
+
+    @Test
+    void getAllByUserWithWrongUserTest() {
+        assertThrows(NotFoundException.class, () -> itemRequestController.getAllByUser(1L));
     }
 
     @Test
@@ -52,5 +65,15 @@ class ItemRequestControllerTests {
         assertEquals(0, itemRequestController.getAll(0, 10, user.getId()).size());
         UserDto user2 = userController.create(userDto.toBuilder().email("user1@email.com").build());
         assertEquals(1, itemRequestController.getAll(0, 10, user2.getId()).size());
+    }
+
+    @Test
+    void getAllByWrongUser() {
+        assertThrows(NotFoundException.class, () -> itemRequestController.getAll(0, 10, 1L));
+    }
+
+    @Test
+    void getAllWithWrongFrom() {
+        assertThrows(BadRequestException.class, () -> itemRequestController.getAll(-1, 10, 1L));
     }
 }
