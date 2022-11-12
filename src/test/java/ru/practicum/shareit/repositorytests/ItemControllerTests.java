@@ -59,16 +59,16 @@ class ItemControllerTests {
     void deleteTest() {
         userController.create(userDto);
         itemController.create(1L, itemDto);
-        assertEquals(1, itemController.getAll(1L).size());
+        assertEquals(1, itemController.getAll(1L, 0, 10).size());
         itemController.delete(1L);
-        assertEquals(0, itemController.getAll(1L).size());
+        assertEquals(0, itemController.getAll(1L, 0, 10).size());
     }
 
     @Test
     void searchTest() {
         userController.create(userDto);
         itemController.create(1L, itemDto);
-        assertEquals(1, itemController.search("Desc").size());
+        assertEquals(1, itemController.search("Desc", 0, 10).size());
     }
 
     @Test

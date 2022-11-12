@@ -6,7 +6,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import java.util.List;
 
 public interface ItemService {
-    List<ItemDto> getAll(Long userId);
+    List<ItemDto> getAll(Long userId, int from, int size);
 
     ItemDto getById(Long id, Long ownerId);
 
@@ -16,7 +16,7 @@ public interface ItemService {
 
     void delete(Long id);
 
-    List<ItemDto> search(String text);
+    List<ItemDto> search(String text, int from, int size);
 
     CommentDto createComment(Long itemId, Long userId, CommentDto commentDto);
 }

@@ -81,8 +81,8 @@ class BookingControllerTests {
                 .start(LocalDateTime.of(2022, 10, 24, 12, 30))
                 .end(LocalDateTime.of(2022, 11, 10, 13, 0))
                 .itemId(item.getId()).build(), user1.getId());
-        assertEquals(1, bookingController.getAllByUser(user1.getId(), "WAITING").size());
+        assertEquals(1, bookingController.getAllByUser(user1.getId(), "WAITING", 0, 10).size());
         bookingController.approve(booking.getId(), user.getId(), true);
-        assertEquals(1, bookingController.getAllByOwner(user.getId(), "CURRENT").size());
+        assertEquals(1, bookingController.getAllByOwner(user.getId(), "CURRENT", 0, 10).size());
     }
 }
