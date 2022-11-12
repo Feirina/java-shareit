@@ -21,7 +21,7 @@ import static ru.practicum.shareit.request.ItemRequestMapper.toItemRequest;
 import static ru.practicum.shareit.request.ItemRequestMapper.toItemRequestDto;
 
 @Service
-public class ItemRequestServiceImpl implements ItemRequestService{
+public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository itemRequestRepository;
 
     private final UserRepository userRepository;
@@ -55,7 +55,7 @@ public class ItemRequestServiceImpl implements ItemRequestService{
                 .orElseThrow(() -> new NotFoundException("Невозможно найти запросы пользователя - " +
                         "не найден пользователь с id " + userId));
         List<ItemRequestDto> itemRequestDtos = itemRequestRepository.findAllByRequestorIdOrderByCreatedAsc(userId)
-                .stream().map(ItemRequestMapper :: toItemRequestDto).collect(Collectors.toList());
+                .stream().map(ItemRequestMapper::toItemRequestDto).collect(Collectors.toList());
         itemRequestDtos.forEach(this::setItemsToItemRequestDto);
 
         return itemRequestDtos;
@@ -92,6 +92,6 @@ public class ItemRequestServiceImpl implements ItemRequestService{
 
     private void setItemsToItemRequestDto(ItemRequestDto itemRequestDto) {
         itemRequestDto.setItems(itemRepository.findAllByRequestId(itemRequestDto.getId())
-                .stream().map(ItemMapper :: toItemShortDto).collect(Collectors.toList()));
+                .stream().map(ItemMapper::toItemShortDto).collect(Collectors.toList()));
     }
 }
