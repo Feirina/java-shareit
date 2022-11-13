@@ -1,5 +1,6 @@
 package ru.practicum.shareit.bookingtests;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,26 +34,37 @@ class BookingControllerTests {
     @Autowired
     private ItemController itemController;
 
-    private ItemDto itemDto = ItemDto.builder()
-            .name("name")
-            .description("description")
-            .available(true)
-            .build();
+    private ItemDto itemDto;
 
-    private UserDto userDto = UserDto.builder()
-            .name("name")
-            .email("user@email.com")
-            .build();
+    private UserDto userDto;
 
-    private UserDto userDto1 = UserDto.builder()
-            .name("name")
-            .email("user1@email.com")
-            .build();
+    private UserDto userDto1;
 
-    private BookingShortDto bookingShortDto = BookingShortDto.builder()
-            .start(LocalDateTime.of(2022, 10, 24, 12, 30))
-            .end(LocalDateTime.of(2023, 11, 10, 13, 0))
-            .itemId(1L).build();
+    private BookingShortDto bookingShortDto;
+
+    @BeforeEach
+    void init() {
+        itemDto = ItemDto.builder()
+                .name("name")
+                .description("description")
+                .available(true)
+                .build();
+
+        userDto = UserDto.builder()
+                .name("name")
+                .email("user@email.com")
+                .build();
+
+        userDto1 = UserDto.builder()
+                .name("name")
+                .email("user1@email.com")
+                .build();
+
+        bookingShortDto = BookingShortDto.builder()
+                .start(LocalDateTime.of(2022, 10, 24, 12, 30))
+                .end(LocalDateTime.of(2023, 11, 10, 13, 0))
+                .itemId(1L).build();
+    }
 
     @Test
     void createTest() {

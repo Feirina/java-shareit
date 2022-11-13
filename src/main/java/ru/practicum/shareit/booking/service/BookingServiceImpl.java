@@ -133,7 +133,10 @@ public class BookingServiceImpl implements BookingService {
                 throw new BadRequestException("Unknown state: UNSUPPORTED_STATUS");
         }
 
-        return bookingDtoList.stream().map(BookingMapper::toBookingDto).collect(Collectors.toList());
+        return bookingDtoList
+                .stream()
+                .map(BookingMapper::toBookingDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -173,7 +176,10 @@ public class BookingServiceImpl implements BookingService {
                 throw new BadRequestException("Unknown state: UNSUPPORTED_STATUS");
         }
 
-        return bookingDtoList.stream().map(BookingMapper::toBookingDto).collect(Collectors.toList());
+        return bookingDtoList
+                .stream()
+                .map(BookingMapper::toBookingDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

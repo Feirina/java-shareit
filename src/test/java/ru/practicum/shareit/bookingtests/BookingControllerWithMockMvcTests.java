@@ -1,6 +1,7 @@
 package ru.practicum.shareit.bookingtests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,47 +34,57 @@ import static ru.practicum.shareit.user.UserMapper.toUser;
 @WebMvcTest(controllers = BookingController.class)
 class BookingControllerWithMockMvcTests {
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
-    BookingService bookingService;
+    private BookingService bookingService;
 
     @Autowired
-    MockMvc mvc;
+    private MockMvc mvc;
 
-    private UserDto userDto = UserDto
-            .builder()
-            .id(2L)
-            .name("username")
-            .email("user@email.ru")
-            .build();
+    private UserDto userDto;
 
-    private ItemDto itemDto = ItemDto
-            .builder()
-            .id(1L)
-            .name("itemname")
-            .description("descriptionitem")
-            .available(true)
-            .build();
+    private ItemDto itemDto;
 
-    private BookingDto bookingDto = BookingDto
-            .builder()
-            .id(1L)
-            .start(LocalDateTime.of(2022, 12, 12, 10, 0))
-            .end(LocalDateTime.of(2022, 12, 20, 10, 0))
-            .booker(toUser(userDto))
-            .item(toItem(itemDto))
-            .build();
+    private BookingDto bookingDto;
 
-    private BookingShortDto bookingShortDto = BookingShortDto
-            .builder()
-            .id(1L)
-            .start(LocalDateTime.of(2022, 12, 12, 10, 0))
-            .end(LocalDateTime.of(2022, 12, 20, 10, 0))
-            .itemId(1L)
-            .bookerId(2L)
-            .build();
+    private BookingShortDto bookingShortDto;
 
+    @BeforeEach
+    void init() {
+        userDto = UserDto
+                .builder()
+                .id(2L)
+                .name("username")
+                .email("user@email.ru")
+                .build();
+
+        itemDto = ItemDto
+                .builder()
+                .id(1L)
+                .name("itemname")
+                .description("descriptionitem")
+                .available(true)
+                .build();
+
+        bookingDto = BookingDto
+                .builder()
+                .id(1L)
+                .start(LocalDateTime.of(2022, 12, 12, 10, 0))
+                .end(LocalDateTime.of(2022, 12, 20, 10, 0))
+                .booker(toUser(userDto))
+                .item(toItem(itemDto))
+                .build();
+
+        bookingShortDto = BookingShortDto
+                .builder()
+                .id(1L)
+                .start(LocalDateTime.of(2022, 12, 12, 10, 0))
+                .end(LocalDateTime.of(2022, 12, 20, 10, 0))
+                .itemId(1L)
+                .bookerId(2L)
+                .build();
+    }
     @Test
     void createTest() throws Exception {
         when(bookingService.create(any(), anyLong()))

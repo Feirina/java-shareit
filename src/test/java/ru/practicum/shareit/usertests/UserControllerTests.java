@@ -1,5 +1,6 @@
 package ru.practicum.shareit.usertests;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,10 +18,15 @@ class UserControllerTests {
     @Autowired
     private UserController userController;
 
-    private UserDto user = UserDto.builder()
-            .name("name")
-            .email("user@email.com")
-            .build();
+    private UserDto user;
+
+    @BeforeEach
+    void init() {
+        user = UserDto.builder()
+                .name("name")
+                .email("user@email.com")
+                .build();
+    }
 
     @Test
     void createTest() {

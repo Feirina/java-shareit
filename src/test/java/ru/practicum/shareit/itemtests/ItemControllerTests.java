@@ -1,5 +1,6 @@
 package ru.practicum.shareit.itemtests;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,26 +38,37 @@ class ItemControllerTests {
     @Autowired
     private ItemRequestController itemRequestController;
 
-    private ItemDto itemDto = ItemDto.builder()
-            .name("name")
-            .description("description")
-            .available(true)
-            .build();
+    private ItemDto itemDto;
 
-    private UserDto userDto = UserDto.builder()
-            .name("name")
-            .email("user@email.com")
-            .build();
+    private UserDto userDto;
 
-    private ItemRequestDto itemRequestDto = ItemRequestDto
-            .builder()
-            .description("item request description")
-            .build();
+    private ItemRequestDto itemRequestDto;
 
-    private CommentDto comment = CommentDto
-            .builder()
-            .text("first comment")
-            .build();
+    private CommentDto comment;
+
+    @BeforeEach
+    void init() {
+        itemDto = ItemDto.builder()
+                .name("name")
+                .description("description")
+                .available(true)
+                .build();
+
+        userDto = UserDto.builder()
+                .name("name")
+                .email("user@email.com")
+                .build();
+
+        itemRequestDto = ItemRequestDto
+                .builder()
+                .description("item request description")
+                .build();
+
+        comment = CommentDto
+                .builder()
+                .text("first comment")
+                .build();
+    }
 
     @Test
     void createTest() {

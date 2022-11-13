@@ -1,6 +1,7 @@
 package ru.practicum.shareit.itemtests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,27 +25,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = ItemController.class)
 class ItemControllerWithMockMvcTests {
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
-    ItemService itemService;
+    private ItemService itemService;
 
     @Autowired
-    MockMvc mvc;
+    private MockMvc mvc;
 
-    private ItemDto itemDto = ItemDto
-            .builder()
-            .id(1L)
-            .name("item name")
-            .description("item description")
-            .available(true)
-            .build();
+    private ItemDto itemDto;
 
-    private CommentDto commentDto = CommentDto
-            .builder()
-            .id(1L)
-            .text("text of comment")
-            .build();
+    private CommentDto commentDto;
+
+    @BeforeEach
+    void init() {
+        itemDto = ItemDto
+                .builder()
+                .id(1L)
+                .name("item name")
+                .description("item description")
+                .available(true)
+                .build();
+
+        commentDto = CommentDto
+                .builder()
+                .id(1L)
+                .text("text of comment")
+                .build();
+    }
 
     @Test
     void getAllTest() throws Exception {

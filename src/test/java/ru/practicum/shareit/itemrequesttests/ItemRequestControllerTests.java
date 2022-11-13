@@ -1,5 +1,6 @@
 package ru.practicum.shareit.itemrequesttests;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,16 +24,23 @@ class ItemRequestControllerTests {
     @Autowired
     private UserController userController;
 
-    private ItemRequestDto itemRequestDto = ItemRequestDto
-            .builder()
-            .description("item request description")
-            .build();
+    private ItemRequestDto itemRequestDto;
 
-    private UserDto userDto = UserDto
-            .builder()
-            .name("name")
-            .email("user@email.com")
-            .build();
+    private UserDto userDto;
+
+    @BeforeEach
+    void init() {
+        itemRequestDto = ItemRequestDto
+                .builder()
+                .description("item request description")
+                .build();
+
+        userDto = UserDto
+                .builder()
+                .name("name")
+                .email("user@email.com")
+                .build();
+    }
 
     @Test
     void createTest() {

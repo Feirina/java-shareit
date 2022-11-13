@@ -55,7 +55,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .orElseThrow(() -> new NotFoundException("Невозможно найти запросы пользователя - " +
                         "не найден пользователь с id " + userId));
         List<ItemRequestDto> itemRequestDtos = itemRequestRepository.findAllByRequestorIdOrderByCreatedAsc(userId)
-                .stream().map(ItemRequestMapper::toItemRequestDto).collect(Collectors.toList());
+                .stream()
+                .map(ItemRequestMapper::toItemRequestDto)
+                .collect(Collectors.toList());
         itemRequestDtos.forEach(this::setItemsToItemRequestDto);
 
         return itemRequestDtos;
@@ -69,7 +71,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                         "не найден пользователь с id " + userId));
         List<ItemRequestDto> itemRequestDtos = itemRequestRepository.findAllByRequestorNotLikeOrderByCreatedAsc(user,
                         PageRequest.of(from, size))
-                .stream().map(ItemRequestMapper::toItemRequestDto).collect(Collectors.toList());
+                .stream()
+                .map(ItemRequestMapper::toItemRequestDto)
+                .collect(Collectors.toList());
         itemRequestDtos.forEach(this::setItemsToItemRequestDto);
 
         return itemRequestDtos;
@@ -92,6 +96,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     private void setItemsToItemRequestDto(ItemRequestDto itemRequestDto) {
         itemRequestDto.setItems(itemRepository.findAllByRequestId(itemRequestDto.getId())
-                .stream().map(ItemMapper::toItemShortDto).collect(Collectors.toList()));
+                .stream()
+                .map(ItemMapper::toItemShortDto)
+                .collect(Collectors.toList()));
     }
 }

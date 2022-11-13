@@ -1,6 +1,7 @@
 package ru.practicum.shareit.usertests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,20 +25,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = UserController.class)
 class UserControllerWithMockMvcTests {
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    MockMvc mvc;
+    private MockMvc mvc;
 
-    private UserDto userDto = UserDto
-            .builder()
-            .id(1L)
-            .name("user name")
-            .email("user@email.com")
-            .build();
+    private UserDto userDto;
+
+    @BeforeEach
+    void init() {
+        userDto = UserDto
+                .builder()
+                .id(1L)
+                .name("user name")
+                .email("user@email.com")
+                .build();
+    }
 
     @Test
     void getAllTest() throws Exception {

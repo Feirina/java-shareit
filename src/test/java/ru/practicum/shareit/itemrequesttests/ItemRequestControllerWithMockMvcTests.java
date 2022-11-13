@@ -1,6 +1,7 @@
 package ru.practicum.shareit.itemrequesttests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,19 +25,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = ItemRequestController.class)
 class ItemRequestControllerWithMockMvcTests {
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
-    ItemRequestService itemRequestService;
+    private ItemRequestService itemRequestService;
 
     @Autowired
-    MockMvc mvc;
+    private MockMvc mvc;
 
-    private ItemRequestDto itemRequestDto = ItemRequestDto
-            .builder()
-            .id(1L)
-            .description("item request description")
-            .build();
+    private ItemRequestDto itemRequestDto;
+
+    @BeforeEach
+    void init() {
+        itemRequestDto = ItemRequestDto
+                .builder()
+                .id(1L)
+                .description("item request description")
+                .build();
+    }
 
     @Test
     void createTest() throws Exception {

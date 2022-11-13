@@ -56,7 +56,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getAll(Long userId, int from, int size) {
         List<ItemDto> itemDtoList = itemRepository.findAllByOwnerId(userId, PageRequest.of(from, size))
-                    .stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+                .stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
         itemDtoList.forEach(this::setFieldsToItemDto);
 
         return itemDtoList;
@@ -69,7 +71,9 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new NotFoundException("Не найдена вещь с id: " + id));
         ItemDto itemDto = toItemDto(item);
         itemDto.setComments(commentRepository.findAllByItemId(id)
-                .stream().map(CommentMapper::toCommentDto).collect(Collectors.toList()));
+                .stream()
+                .map(CommentMapper::toCommentDto)
+                .collect(Collectors.toList()));
         if (item.getOwner().getId().equals(ownerId)) {
             setFieldsToItemDto(itemDto);
         }
@@ -125,7 +129,9 @@ public class ItemServiceImpl implements ItemService {
             return searchedItems;
         }
         searchedItems = itemRepository.search(text, PageRequest.of(from, size))
-                .stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+                .stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
 
         return searchedItems;
     }
@@ -159,7 +165,8 @@ public class ItemServiceImpl implements ItemService {
         itemDto.setNextBooking(itemDto.getLastBooking() == null ?
                 null : toBookingShortDto(bookingRepository.findAllByItemIdOrderByStartDesc(itemDto.getId()).get(0)));
         itemDto.setComments(commentRepository.findAllByItemId(itemDto.getId())
-                .stream().map(CommentMapper::toCommentDto).collect(Collectors.toList()));
-
+                .stream()
+                .map(CommentMapper::toCommentDto)
+                .collect(Collectors.toList()));
     }
 }
