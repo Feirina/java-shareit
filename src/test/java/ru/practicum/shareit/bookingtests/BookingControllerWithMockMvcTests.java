@@ -85,6 +85,7 @@ class BookingControllerWithMockMvcTests {
                 .bookerId(2L)
                 .build();
     }
+
     @Test
     void createTest() throws Exception {
         when(bookingService.create(any(), anyLong()))
