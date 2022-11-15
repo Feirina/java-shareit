@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.repository;
 
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.model.Booking;
@@ -14,26 +15,28 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllByItemIdOrderByStartDesc(Long itemId);
 
-    List<Booking> findAllByBooker(User booker, Sort sort);
+    Page<Booking> findAllByBooker(User booker, Pageable pageable);
 
     List<Booking> findAllByBookerIdAndItemIdAndStatusEqualsAndEndIsBefore(Long bookerId, Long itemId,
                                                                           BookingStatus status, LocalDateTime end);
 
-    List<Booking> findAllByBookerAndStartBeforeAndEndAfter(User booker, LocalDateTime start, LocalDateTime end, Sort sort);
+    Page<Booking> findAllByBookerAndStartBeforeAndEndAfter(User booker, LocalDateTime start, LocalDateTime end,
+                                                           Pageable pageable);
 
-    List<Booking> findAllByBookerAndEndBefore(User booker, LocalDateTime end, Sort sort);
+    Page<Booking> findAllByBookerAndEndBefore(User booker, LocalDateTime end, Pageable pageable);
 
-    List<Booking> findAllByBookerAndStartAfter(User booker, LocalDateTime start, Sort sort);
+    Page<Booking> findAllByBookerAndStartAfter(User booker, LocalDateTime start, Pageable pageable);
 
-    List<Booking> findAllByBookerAndStatusEquals(User booker, BookingStatus status, Sort sort);
+    Page<Booking> findAllByBookerAndStatusEquals(User booker, BookingStatus status, Pageable pageable);
 
-    List<Booking> findAllByItemOwner(User owner, Sort sort);
+    Page<Booking> findAllByItemOwner(User owner, Pageable pageable);
 
-    List<Booking> findAllByItemOwnerAndStartBeforeAndEndAfter(User owner, LocalDateTime start, LocalDateTime end, Sort sort);
+    Page<Booking> findAllByItemOwnerAndStartBeforeAndEndAfter(User owner, LocalDateTime start,
+                                                              LocalDateTime end, Pageable pageable);
 
-    List<Booking> findAllByItemOwnerAndEndBefore(User owner, LocalDateTime end, Sort sort);
+    Page<Booking> findAllByItemOwnerAndEndBefore(User owner, LocalDateTime end, Pageable pageable);
 
-    List<Booking> findAllByItemOwnerAndStartAfter(User owner, LocalDateTime start, Sort sort);
+    Page<Booking> findAllByItemOwnerAndStartAfter(User owner, LocalDateTime start, Pageable pageable);
 
-    List<Booking> findAllByItemOwnerAndStatusEquals(User owner, BookingStatus status, Sort sort);
+    Page<Booking> findAllByItemOwnerAndStatusEquals(User owner, BookingStatus status, Pageable pageable);
 }
