@@ -70,7 +70,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .orElseThrow(() -> new NotFoundException("Невозможно найти запросы - " +
                         "не найден пользователь с id " + userId));
         List<ItemRequestDto> itemRequestDtos = itemRequestRepository.findAllByRequestorNotLikeOrderByCreatedAsc(user,
-                        PageRequest.of(from, size))
+                        PageRequest.of(from / size, size))
                 .stream()
                 .map(ItemRequestMapper::toItemRequestDto)
                 .collect(Collectors.toList());

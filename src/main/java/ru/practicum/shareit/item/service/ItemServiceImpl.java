@@ -55,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(readOnly = true)
     @Override
     public List<ItemDto> getAll(Long userId, int from, int size) {
-        List<ItemDto> itemDtoList = itemRepository.findAllByOwnerId(userId, PageRequest.of(from, size))
+        List<ItemDto> itemDtoList = itemRepository.findAllByOwnerId(userId, PageRequest.of(from / size, size))
                 .stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
@@ -128,7 +128,7 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank()) {
             return searchedItems;
         }
-        searchedItems = itemRepository.search(text, PageRequest.of(from, size))
+        searchedItems = itemRepository.search(text, PageRequest.of(from / size, size))
                 .stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
