@@ -38,7 +38,7 @@ public class ItemRequestController {
                                                   @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                   @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Get all item requests");
-        return itemRequestClient.getItemRequests(from, size, userId);
+        return itemRequestClient.getItemRequests(userId, from, size);
     }
 
     @GetMapping("/{requestId}")

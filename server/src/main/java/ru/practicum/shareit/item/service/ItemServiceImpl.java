@@ -21,6 +21,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -56,13 +57,12 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(readOnly = true)
     @Override
     public List<ItemDto> getAll(Long userId, int from, int size) {
-        List<ItemDto> itemDtoList = itemRepository.findAllByOwnerId(userId, PageRequest.of(from / size, size))
+        return itemRepository.findAllByOwnerId(userId, PageRequest.of(from / size, size))
                 .stream()
+                .sorted(Comparator.comparing(Item::getId))
                 .map(ItemMapper::toItemDto)
+                .map(this::setFieldsToItemDto)
                 .collect(Collectors.toList());
-        itemDtoList.forEach(this::setFieldsToItemDto);
-
-        return itemDtoList;
     }
 
     @Transactional(readOnly = true)
@@ -160,7 +160,7 @@ public class ItemServiceImpl implements ItemService {
         return toCommentDto(comment);
     }
 
-    private void setFieldsToItemDto(ItemDto itemDto) {
+    private ItemDto setFieldsToItemDto(ItemDto itemDto) {
         itemDto.setLastBooking(bookingRepository.findAllByItemIdOrderByStartAsc(itemDto.getId()).isEmpty() ?
                 null : toBookingShortDto(bookingRepository.findAllByItemIdOrderByStartAsc(itemDto.getId()).get(0)));
         itemDto.setNextBooking(itemDto.getLastBooking() == null ?
@@ -169,5 +169,6 @@ public class ItemServiceImpl implements ItemService {
                 .stream()
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList()));
+        return itemDto;
     }
 }
