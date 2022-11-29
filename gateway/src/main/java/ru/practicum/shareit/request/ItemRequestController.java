@@ -13,9 +13,9 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 @Controller
-@RequestMapping("/requests")
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
+@RequestMapping("/requests")
 @Validated
 public class ItemRequestController {
     private final ItemRequestClient itemRequestClient;
@@ -34,11 +34,11 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getItemRequests(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                  @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                                  @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Get all item requests");
-        return itemRequestClient.getItemRequests(userId, from, size);
+    public ResponseEntity<Object> getAllItemRequests(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                     @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                     @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        log.info("Get all item requests without user {}", userId);
+        return itemRequestClient.getAll(userId, from, size);
     }
 
     @GetMapping("/{requestId}")

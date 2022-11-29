@@ -39,10 +39,10 @@ class ItemRequestRepositoryTests {
         User user = userRepository.save(User.builder().name("name").email("email@email.com").build());
         itemRequestRepository.save(ItemRequest.builder().description("description").requestor(user)
                 .created(LocalDateTime.now()).build());
-        assertThat(itemRequestRepository.findAllByRequestorNotLikeOrderByCreatedAsc(user, Pageable.ofSize(10))
+        assertThat(itemRequestRepository.findAllByRequestorIsNot(user, Pageable.ofSize(10))
                 .stream().count(), equalTo(0L));
         User user2 = userRepository.save(User.builder().name("name2").email("email2@email.com").build());
-        assertThat(itemRequestRepository.findAllByRequestorNotLikeOrderByCreatedAsc(user2, Pageable.ofSize(10))
+        assertThat(itemRequestRepository.findAllByRequestorIsNot(user2, Pageable.ofSize(10))
                 .stream().count(), equalTo(1L));
     }
 }

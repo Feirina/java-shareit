@@ -69,13 +69,13 @@ class ItemRequestControllerTests {
     void getAll() {
         UserDto user = userController.create(userDto);
         ItemRequestDto itemRequest = itemRequestController.create(user.getId(), itemRequestDto);
-        assertEquals(0, itemRequestController.getAll(0, 10, user.getId()).size());
+        assertEquals(0, itemRequestController.getAll(user.getId(), 0, 10).size());
         UserDto user2 = userController.create(userDto.toBuilder().email("user1@email.com").build());
-        assertEquals(1, itemRequestController.getAll(0, 10, user2.getId()).size());
+        assertEquals(1, itemRequestController.getAll(user2.getId(), 0, 10).size());
     }
 
     @Test
     void getAllByWrongUser() {
-        assertThrows(NotFoundException.class, () -> itemRequestController.getAll(0, 10, 1L));
+        assertThrows(NotFoundException.class, () -> itemRequestController.getAll(1L, 0, 10));
     }
 }

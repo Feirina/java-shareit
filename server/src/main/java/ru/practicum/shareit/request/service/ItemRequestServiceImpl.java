@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request.service;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -54,29 +55,25 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Невозможно найти запросы пользователя - " +
                         "не найден пользователь с id " + userId));
-        List<ItemRequestDto> itemRequestDtos = itemRequestRepository.findAllByRequestorIdOrderByCreatedAsc(userId)
+        return itemRequestRepository.findAllByRequestorIdOrderByCreatedAsc(userId)
                 .stream()
                 .map(ItemRequestMapper::toItemRequestDto)
+                .map(this::setItemsToItemRequestDto)
                 .collect(Collectors.toList());
-        itemRequestDtos.forEach(this::setItemsToItemRequestDto);
-
-        return itemRequestDtos;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<ItemRequestDto> getAll(int from, int size, Long userId) {
+    public List<ItemRequestDto> getAll(Long userId, int from, int size) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Невозможно найти запросы - " +
                         "не найден пользователь с id " + userId));
-        List<ItemRequestDto> itemRequestDtos = itemRequestRepository.findAllByRequestorNotLikeOrderByCreatedAsc(user,
-                        PageRequest.of(from / size, size))
+        return itemRequestRepository.findAllByRequestorIsNot(user,
+                        PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "created")))
                 .stream()
                 .map(ItemRequestMapper::toItemRequestDto)
+                .map(this::setItemsToItemRequestDto)
                 .collect(Collectors.toList());
-        itemRequestDtos.forEach(this::setItemsToItemRequestDto);
-
-        return itemRequestDtos;
     }
 
     @Transactional(readOnly = true)
@@ -94,10 +91,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return itemRequestDto;
     }
 
-    private void setItemsToItemRequestDto(ItemRequestDto itemRequestDto) {
+    private ItemRequestDto setItemsToItemRequestDto(ItemRequestDto itemRequestDto) {
         itemRequestDto.setItems(itemRepository.findAllByRequestId(itemRequestDto.getId())
                 .stream()
                 .map(ItemMapper::toItemShortDto)
                 .collect(Collectors.toList()));
+        return itemRequestDto;
     }
 }

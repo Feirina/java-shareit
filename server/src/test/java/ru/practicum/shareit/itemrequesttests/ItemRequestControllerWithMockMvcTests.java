@@ -73,7 +73,7 @@ class ItemRequestControllerWithMockMvcTests {
 
     @Test
     void getAllTest() throws Exception {
-        when(itemRequestService.getAll(anyInt(), anyInt(), anyLong()))
+        when(itemRequestService.getAll(anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of(itemRequestDto));
         mvc.perform(get("/requests/all")
                 .characterEncoding(StandardCharsets.UTF_8)
