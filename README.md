@@ -49,3 +49,6 @@ java-shareit это платформа для аренды вещей. Можн�
 **PATCH /users/{id}** обновление данных пользователя с id.
 
 **DELETE /users/{id}** удаление пользователя по id.
+
+## Схема базы данных
+![ShareIt Data Base diagram](https://github.com/Feirina/java-shareit/blob/main/ShareIt%20DB%20diagram.jpg)
